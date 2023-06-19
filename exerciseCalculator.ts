@@ -8,7 +8,7 @@ interface ExerciseResult {
   average: number;
 }
 
-interface parseExerciseResult {
+/* interface parseExerciseResult {
   target: number,
   dailyExercises: number[]
 }
@@ -24,9 +24,9 @@ const parseExerciseArguments = (args: Array<string>): parseExerciseResult => {
   } else {
     throw new Error('Provided values were not numbers!');
   }
-};
+}; */
 
-const calculateExercises = (dailyExercises: number[], target: number): ExerciseResult => {
+export const calculateExercises = (dailyExercises: number[], target: number): ExerciseResult => {
   const periodLength = dailyExercises.length;
   const trainingDays = dailyExercises.filter(hours => hours > 0).length;
 
@@ -59,14 +59,14 @@ const calculateExercises = (dailyExercises: number[], target: number): ExerciseR
   };
 };
 
-try {
+/* try {
   const { target, dailyExercises } = parseExerciseArguments(process.argv);
   console.log(calculateExercises(dailyExercises, target));
 } catch (e) {
   let message = 'Something went wrong! ';
   if (e instanceof Error) message += e.message;
   console.log(message);
-}
+} */
 
 /* // Hardcoded
 const dailyExercises = [3, 0, 2, 4.5, 0, 3, 1];
