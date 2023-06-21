@@ -4,9 +4,13 @@ import patientService from "../services/patientService";
 const router = express.Router();
 
 router.get("/", (_req, res) => {
-  console.log("all patients sent!\n");
   //res.send(patientService.getPatients());
   res.send(patientService.getExcludedPatients());
+});
+
+router.post("/", (req, res) => {
+  const newPatient = req.body;
+  res.send(patientService.addPatient(newPatient));
 });
 
 export default router;

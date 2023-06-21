@@ -6,6 +6,8 @@ export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment">;
 
 export type ssnExcludedPatient = Omit<Patient, "ssn">;
 
+export type newPatientEntry = Omit<Patient, "id">;
+
 export interface DiaryEntry {
   id: number;
   date: string;
