@@ -1,12 +1,18 @@
-export type Weather = "sunny" | "rainy" | "cloudy" | "windy" | "stormy";
+export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'windy' | 'stormy';
 
-export type Visibility = "great" | "good" | "ok" | "poor";
+export type Visibility = 'great' | 'good' | 'ok' | 'poor';
 
-export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment">;
+export type NonSensitiveDiaryEntry = Omit<DiaryEntry, 'comment'>;
 
-export type ssnExcludedPatient = Omit<Patient, "ssn">;
+export type ssnExcludedPatient = Omit<Patient, 'ssn'>;
 
-export type newPatientEntry = Omit<Patient, "id">;
+export type newPatientEntry = Omit<Patient, 'id'>;
+
+export enum Gender {
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
+}
 
 export interface DiaryEntry {
   id: number;
@@ -27,6 +33,6 @@ export interface Patient {
   name: string;
   dateOfBirth: string;
   ssn: string;
-  gender: string;
+  gender: Gender;
   occupation: string;
 }
