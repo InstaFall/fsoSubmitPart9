@@ -3,16 +3,20 @@ import { NewDiary } from "../types";
 
 type DiaryFormProps = {
   addDiary: (diary: NewDiary) => void;
+  error: string | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const DiaryForm = ({ addDiary, setError }: DiaryFormProps) => {
+const DiaryForm = ({ error, addDiary, setError }: DiaryFormProps) => {
   const [newDiary, setNewDiary] = useState<NewDiary>({
     date: "",
-    weather: "",
-    visibility: "",
+    weather: "sunny",
+    visibility: "great",
     comment: "",
   });
+
+  const weatherOptions = ["sunny", "rainy", "cloudy", "stormy", "windy"];
+  const visibilityOptions = ["great", "good", "ok", "poor"];
 
   const handleDiaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -21,11 +25,27 @@ const DiaryForm = ({ addDiary, setError }: DiaryFormProps) => {
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
+
+    const date = new Date(newDiary.date);
+    const year = date.getFullYear();
+    if (isNaN(date.getTime()) || year < 1900 || year > 2100) {
+      setError("Please enter a valid date.");
+      setTimeout(() => {
+        setNewDiary({
+          date: "",
+          weather: "sunny",
+          visibility: "great",
+          comment: "",
+        });
+        setError(null);
+      }, 1000);
+      return;
+    }
     addDiary(newDiary);
     setNewDiary({
       date: "",
-      weather: "",
-      visibility: "",
+      weather: "sunny",
+      visibility: "great",
       comment: "",
     });
   };
@@ -33,11 +53,13 @@ const DiaryForm = ({ addDiary, setError }: DiaryFormProps) => {
   return (
     <>
       <h1>add new entry </h1>
+      {error && <div style={{ color: "red" }}>{error}</div>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>
             Date:
             <input
+              type="date"
               name="date"
               value={newDiary.date}
               onChange={handleDiaryChange}
@@ -45,24 +67,34 @@ const DiaryForm = ({ addDiary, setError }: DiaryFormProps) => {
           </label>
         </div>
         <div>
-          <label>
-            Weather:
-            <input
-              name="weather"
-              value={newDiary.weather}
-              onChange={handleDiaryChange}
-            />
-          </label>
+          Weather:
+          {weatherOptions.map((weather) => (
+            <label key={weather}>
+              <input
+                type="radio"
+                name="weather"
+                value={weather}
+                checked={newDiary.weather === weather}
+                onChange={handleDiaryChange}
+              />
+              {weather}
+            </label>
+          ))}
         </div>
         <div>
-          <label>
-            Visibility:
-            <input
-              name="visibility"
-              value={newDiary.visibility}
-              onChange={handleDiaryChange}
-            />
-          </label>
+          Visibility:
+          {visibilityOptions.map((visibility) => (
+            <label key={visibility}>
+              <input
+                type="radio"
+                name="visibility"
+                value={visibility}
+                checked={newDiary.visibility === visibility}
+                onChange={handleDiaryChange}
+              />
+              {visibility}
+            </label>
+          ))}
         </div>
         <div>
           <label>

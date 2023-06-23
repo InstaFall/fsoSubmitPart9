@@ -27,8 +27,7 @@ const App = () => {
 
   return (
     <div>
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      <DiaryForm addDiary={addDiary} setError={setError} />
+      <DiaryForm error={error} addDiary={addDiary} setError={setError} />
       <Diaries diaries={diaries} />
     </div>
   );
