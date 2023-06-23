@@ -9,8 +9,15 @@ const getDiaries = async () => {
 };
 
 const createDiary = async (newDiary: NewDiary) => {
-  const response = await axios.post<Diary>(baseUrl, newDiary);
-  return response.data;
+  try {
+    const response = await axios.post<Diary>(baseUrl, newDiary);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || "Unknown Error");
+    }
+    throw error;
+  }
 };
 
 export default { getDiaries, createDiary };

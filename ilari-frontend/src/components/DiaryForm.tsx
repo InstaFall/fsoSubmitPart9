@@ -3,9 +3,10 @@ import { NewDiary } from "../types";
 
 type DiaryFormProps = {
   addDiary: (diary: NewDiary) => void;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const DiaryForm = ({ addDiary }: DiaryFormProps) => {
+const DiaryForm = ({ addDiary, setError }: DiaryFormProps) => {
   const [newDiary, setNewDiary] = useState<NewDiary>({
     date: "",
     weather: "",
