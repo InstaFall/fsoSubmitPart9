@@ -10,17 +10,77 @@ const Header = ({ courseName }: HeaderProps) => {
 
 // type declaration for Content
 type ContentProps = {
-  courseParts: { name: string; exerciseCount: number }[];
+  courseParts: CoursePart[];
 };
 
 // Content component
 const Content = ({ courseParts }: ContentProps) => {
+  const assertNever = (value: never): never => {
+    throw new Error(
+      `Unhandled discriminated union member: ${JSON.stringify(value)}`
+    );
+  };
+
+  type PartProps = {
+    coursePart: CoursePart;
+  };
+
+  const Part = ({ coursePart }: PartProps) => {
+    switch (coursePart.kind) {
+      case "basic":
+        return (
+          <div style={{ marginBottom: "1rem" }}>
+            <div>
+              <b>
+                {coursePart.name} {coursePart.exerciseCount}
+              </b>
+            </div>
+            <div>{coursePart.description}</div>
+          </div>
+        );
+      case "group":
+        return (
+          <div style={{ marginBottom: "1rem" }}>
+            <div>
+              <b>
+                {coursePart.name} {coursePart.exerciseCount}
+              </b>
+            </div>
+            <div>Group projects {coursePart.groupProjectCount}</div>
+          </div>
+        );
+      case "background":
+        return (
+          <div style={{ marginBottom: "1rem" }}>
+            <div>
+              <b>
+                {coursePart.name} {coursePart.exerciseCount}
+              </b>
+            </div>
+            <div>{coursePart.description}</div>
+            <div>{coursePart.backgroundMaterial}</div>
+          </div>
+        );
+      case "special":
+        return (
+          <div style={{ marginBottom: "1rem" }}>
+            <div>
+              <b>
+                {coursePart.name} {coursePart.exerciseCount}
+              </b>
+            </div>
+            <div>{coursePart.description}</div>
+            <div>Required: {coursePart.requirements.join(", ")}</div>
+          </div>
+        );
+      default:
+        return assertNever(coursePart);
+    }
+  };
   return (
     <div>
       {courseParts.map((part) => (
-        <p key={part.name}>
-          {part.name} {part.exerciseCount}
-        </p>
+        <Part key={part.name} coursePart={part} />
       ))}
     </div>
   );
@@ -35,27 +95,88 @@ type TotalProps = {
 const Total = ({ courseParts }: TotalProps) => {
   return (
     <p>
-      Number of exercises{' '}
+      Number of exercises{" "}
       {courseParts.reduce((prev, part) => prev + part.exerciseCount, 0)}
     </p>
   );
 };
 
+interface CoursePartBase {
+  name: string;
+  exerciseCount: number;
+}
+
+interface CoursePartWithDescription extends CoursePartBase {
+  description: string;
+}
+
+interface CoursePartBasic extends CoursePartWithDescription {
+  kind: "basic";
+}
+
+interface CoursePartGroup extends CoursePartBase {
+  groupProjectCount: number;
+  kind: "group";
+}
+
+interface CoursePartBackground extends CoursePartWithDescription {
+  backgroundMaterial: string;
+  kind: "background";
+}
+
+interface CoursePartSpecial extends CoursePartWithDescription {
+  requirements: string[];
+  kind: "special";
+}
+
+type CoursePart =
+  | CoursePartBasic
+  | CoursePartGroup
+  | CoursePartBackground
+  | CoursePartSpecial;
+
 // App component
 const App = () => {
-  const courseName = 'Half Stack application development';
-  const courseParts = [
+  const courseName = "Half Stack application development";
+  const courseParts: CoursePart[] = [
     {
-      name: 'Fundamentals',
+      name: "Fundamentals",
       exerciseCount: 10,
+      description: "This is an awesome course part",
+      kind: "basic",
     },
     {
-      name: 'Using props to pass data',
+      name: "Using props to pass data",
       exerciseCount: 7,
+      groupProjectCount: 3,
+      kind: "group",
     },
     {
-      name: 'Deeper type usage',
+      name: "Basics of type Narrowing",
+      exerciseCount: 7,
+      description: "How to go from unknown to string",
+      kind: "basic",
+    },
+    {
+      name: "Deeper type usage",
       exerciseCount: 14,
+      description: "Confusing description",
+      backgroundMaterial:
+        "https://type-level-typescript.com/template-literal-types",
+      kind: "background",
+    },
+    {
+      name: "TypeScript in frontend",
+      exerciseCount: 10,
+      description: "a hard part",
+      kind: "basic",
+    },
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      kind: "special",
     },
   ];
 
