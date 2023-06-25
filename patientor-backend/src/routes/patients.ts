@@ -9,6 +9,18 @@ router.get('/', (_req, res) => {
   res.send(patientService.getExcludedPatients());
 });
 
+router.get('/:id', (req, res) => {
+  const patient = patientService
+    .getPatients()
+    .find((p) => p.id === req.params.id);
+
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.status(404).send({ error: 'Unknown patient' });
+  }
+});
+
 router.post('/', (req, res) => {
   try {
     const newPatient = toNewPatientEntry(req.body);
