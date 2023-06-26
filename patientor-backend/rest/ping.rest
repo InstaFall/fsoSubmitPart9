@@ -1,0 +1,10 @@
+GET http://localhost:3001/api/patients
+Content-Type: application/json
+
+{
+        "name": "InstaFall",
+        "dateOfBirth": "1993-02-04",
+        "ssn": "012457-165Y",
+        "gender": "male",
+        "occupation": "New york city cashier"
+}
