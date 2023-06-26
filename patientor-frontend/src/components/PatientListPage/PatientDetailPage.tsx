@@ -2,25 +2,30 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { apiBaseUrl } from "../../constants";
-import { Patient, Entry } from "../../types";
+import { Patient, Entry, Diagnosis } from "../../types";
 import { Container, Typography, Box } from "@mui/material";
 
 type EntryDetailsProps = {
   entry: Entry;
+  diagnoses: Diagnosis[];
 };
 
-const EntryDetails = ({entry}:EntryDetailsProps) => {
+const EntryDetails = ({entry, diagnoses}:EntryDetailsProps) => {
   return (
     <Box border={1} borderRadius={2} p={2} mb={2}>
-      <Typography variant="body1">{entry.date} {entry.description}</Typography>
+      <Typography variant="body1">
+        {entry.date} {entry.description}
+      </Typography>
       {entry.diagnosisCodes?.map((code) => (
-        <Typography key={code} variant="body1">• {code}</Typography>
+        <Typography key={code} variant="body1">
+          • {code} {diagnoses.find((diagnosis) => diagnosis.code === code)?.name}
+        </Typography>
       ))}
     </Box>
   );
 };
 
-const PatientDetailPage = () => {
+const PatientDetailPage: React.FC<{diagnoses: Diagnosis[]}> = ({diagnoses}) => {
   const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
 
@@ -63,7 +68,7 @@ const PatientDetailPage = () => {
         Entries
       </Typography>
       {patient.entries.map(entry => (
-        <EntryDetails key={entry.id} entry={entry} />
+        <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
       ))}
     </Container>
   );
