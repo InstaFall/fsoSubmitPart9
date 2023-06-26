@@ -8,7 +8,6 @@ import {
   TableCell,
   TableRow,
   TableBody,
-  Divider,
 } from "@mui/material";
 import axios from "axios";
 
@@ -19,7 +18,6 @@ import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
 import { Link } from "react-router-dom";
-import { apiBaseUrl } from "../../constants";
 
 interface Props {
   patients: Patient[];

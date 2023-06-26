@@ -2,8 +2,23 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { apiBaseUrl } from "../../constants";
-import { Patient } from "../../types";
-import { Container, Typography } from "@mui/material";
+import { Patient, Entry } from "../../types";
+import { Container, Typography, Box } from "@mui/material";
+
+type EntryDetailsProps = {
+  entry: Entry;
+};
+
+const EntryDetails = ({entry}:EntryDetailsProps) => {
+  return (
+    <Box border={1} borderRadius={2} p={2} mb={2}>
+      <Typography variant="body1">{entry.date} {entry.description}</Typography>
+      {entry.diagnosisCodes?.map((code) => (
+        <Typography key={code} variant="body1">• {code}</Typography>
+      ))}
+    </Box>
+  );
+};
 
 const PatientDetailPage = () => {
   const { id } = useParams();
@@ -44,9 +59,12 @@ const PatientDetailPage = () => {
       <Typography variant="body1">
         <strong>Occupation:</strong> {patient.occupation}
       </Typography>
-      <Typography variant="body1">
-        <strong>Entries:</strong> {patient.entries.length}
+      <Typography variant="h6" style={{ marginTop: "1em" }}>
+        Entries
       </Typography>
+      {patient.entries.map(entry => (
+        <EntryDetails key={entry.id} entry={entry} />
+      ))}
     </Container>
   );
 };
