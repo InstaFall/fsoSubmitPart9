@@ -73,7 +73,7 @@ const PatientDetailPage: React.FC<{ diagnoses: Diagnosis[] }> = ({
         </Typography>
       )}
       <Divider style={{ marginBottom: "1em" }} />
-      <AddEntryForm onFormSubmit={addNewEntry} />
+      <AddEntryForm onFormSubmit={addNewEntry} diagnoses={diagnoses} />
       <Typography variant="h6" style={{ marginTop: "1em" }}>
         Entries
       </Typography>

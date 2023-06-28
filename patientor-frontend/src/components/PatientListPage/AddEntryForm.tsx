@@ -11,25 +11,32 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  SelectChangeEvent,
 } from "@mui/material";
-import { EntryWithoutId } from "../../types";
+import { Diagnosis, EntryWithoutId } from "../../types";
 
 // AddEntryForm Component
 const AddEntryForm: React.FC<{
   onFormSubmit: (values: EntryWithoutId) => void;
-}> = ({ onFormSubmit }) => {
+  diagnoses: Diagnosis[];
+}> = ({ onFormSubmit, diagnoses }) => {
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
   const [healthCheckRating, setHealthCheckRating] = useState(0);
-  const [diagnosisCodes, setDiagnosisCodes] = useState("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [employerName, setEmployerName] = useState("");
   const [discharge, setDischarge] = useState({ date: "", criteria: "" });
 
   const handleDischargeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDischarge({ ...discharge, [e.target.name]: e.target.value });
   };
+
+  const handleDiagnosisChange = (event: SelectChangeEvent<string[]>) => {
+    setDiagnosisCodes(event.target.value as string[]);
+  };
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -41,7 +48,7 @@ const AddEntryForm: React.FC<{
           description,
           date,
           specialist,
-          diagnosisCodes: diagnosisCodes.split(",").map((code) => code.trim()),
+          diagnosisCodes: diagnosisCodes,
           healthCheckRating,
         };
         break;
@@ -51,7 +58,7 @@ const AddEntryForm: React.FC<{
           description,
           date,
           specialist,
-          diagnosisCodes: diagnosisCodes.split(",").map((code) => code.trim()),
+          diagnosisCodes: diagnosisCodes,
           discharge,
         };
         break;
@@ -61,7 +68,7 @@ const AddEntryForm: React.FC<{
           description,
           date,
           specialist,
-          diagnosisCodes: diagnosisCodes.split(",").map((code) => code.trim()),
+          diagnosisCodes: diagnosisCodes,
           employerName,
         };
         break;
@@ -71,7 +78,7 @@ const AddEntryForm: React.FC<{
           description,
           date,
           specialist,
-          diagnosisCodes: diagnosisCodes.split(",").map((code) => code.trim()),
+          diagnosisCodes: diagnosisCodes,
           healthCheckRating,
         };
         break;
@@ -137,13 +144,21 @@ const AddEntryForm: React.FC<{
         onChange={(e) => setSpecialist(e.target.value)}
         fullWidth
       />
-      <TextField
-        label="Diagnosis Codes"
-        value={diagnosisCodes}
-        onChange={(e) => setDiagnosisCodes(e.target.value)}
-        fullWidth
-        helperText="Use commas to separate multiple codes"
-      />
+      <FormControl fullWidth>
+        <InputLabel id="diagnosis-label">Diagnosis Codes</InputLabel>
+        <Select
+          labelId="diagnosis-label"
+          multiple
+          value={diagnosisCodes}
+          onChange={handleDiagnosisChange}
+        >
+          {diagnoses.map((diagnosis) => (
+            <MenuItem key={diagnosis.code} value={diagnosis.code}>
+              {diagnosis.code}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       {type === "Hospital" && (
         <>
           <TextField
