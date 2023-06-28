@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import axios, { isAxiosError } from "axios";
 import { apiBaseUrl } from "../../constants";
 import { Patient, Diagnosis, EntryWithoutId, Entry } from "../../types";
-import { Container, Typography, Box } from "@mui/material";
+import { Container, Typography, Box, Divider } from "@mui/material";
 import EntryDetails from "./EntryDetails";
 import AddEntryForm from "./AddEntryForm";
+import patientService from "../../services/patients";
 
 const PatientDetailPage: React.FC<{ diagnoses: Diagnosis[] }> = ({
   diagnoses,
@@ -34,10 +35,7 @@ const PatientDetailPage: React.FC<{ diagnoses: Diagnosis[] }> = ({
 
   const addNewEntry = async (values: EntryWithoutId) => {
     try {
-      const { data: newEntry } = await axios.post<Entry>(
-        `${apiBaseUrl}/patients/${id}/entries`,
-        values
-      );
+      const newEntry = await patientService.addNewEntry(values, id);
       setPatient((oldPatient) =>
         oldPatient
           ? { ...oldPatient, entries: [...oldPatient.entries, newEntry] }
@@ -68,15 +66,17 @@ const PatientDetailPage: React.FC<{ diagnoses: Diagnosis[] }> = ({
       <Typography variant="body1">
         <strong>Occupation:</strong> {patient.occupation}
       </Typography>
-      <Typography variant="h6" style={{ marginTop: "1em" }}>
-        Entries
-      </Typography>
+
       {error && (
         <Typography variant="body2" color="error">
           {error}
         </Typography>
       )}
+      <Divider style={{ marginBottom: "1em" }} />
       <AddEntryForm onFormSubmit={addNewEntry} />
+      <Typography variant="h6" style={{ marginTop: "1em" }}>
+        Entries
+      </Typography>
       {patient.entries.map((entry) => (
         <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
       ))}
